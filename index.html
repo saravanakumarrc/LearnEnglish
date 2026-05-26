@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReflectLearn — English for Kids</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #fca85c;
+  --accent-dark: #e8873a;
+  --accent-light: #ffd4a0;
+  --bg: #0d0d14;
+  --surface: #16161f;
+  --surface2: #1e1e2a;
+  --surface3: #252534;
+  --border: #2e2e42;
+  --text: #f0f0f8;
+  --text-2: #a0a0c0;
+  --text-3: #606080;
+  --green: #5cfca8;
+  --red: #fc5c7d;
+  --blue: #5ca8fc;
+  --yellow: #fcf05c;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+}
+.logo-icon {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.btn-sm {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-sm:hover { background: var(--surface3); color: var(--text); border-color: var(--accent); }
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── HOME ── */
+.home-hero {
+  text-align: center;
+  padding: 60px 24px 40px;
+}
+.home-hero h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.home-hero p {
+  color: var(--text-2);
+  font-size: 16px;
+  max-width: 500px;
+  margin: 0 auto 36px;
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+  padding: 0 24px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  min-width: 130px;
+  text-align: center;
+}
+.stat-card .stat-val {
+  font-family: 'Nunito', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+}
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TOPIC GRID */
+.section-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--text);
+  margin-bottom: 20px;
+  padding: 0 24px;
+}
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  padding: 0 24px 48px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.topic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.topic-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--topic-color, var(--accent));
+  opacity: 0;
+  transition: opacity 0.18s;
+}
+.topic-card:hover {
+  border-color: var(--topic-color, var(--accent));
+  transform: translateY(-2px);
+  background: var(--surface2);
+}
+.topic-card:hover::before { opacity: 1; }
+.topic-icon { font-size: 36px; margin-bottom: 10px; display: block; }
+.topic-name {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.topic-meta {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 600;
+}
+.topic-progress {
+  margin-top: 12px;
+  background: var(--surface3);
+  border-radius: 99px;
+  height: 6px;
+  overflow: hidden;
+}
+.topic-progress-fill {
+  height: 100%;
+  background: var(--topic-color, var(--accent));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+/* ── EXERCISE VIEW ── */
+.exercise-view {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+.ex-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.btn-back {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.btn-back:hover { background: var(--surface3); color: var(--text); }
+.ex-topic-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+.ex-progress-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.ex-progress-bar {
+  flex: 1;
+  background: var(--surface3);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+}
+.ex-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.ex-progress-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* TYPE TABS */
+.type-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.type-tab {
+  padding: 8px 18px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.15s;
+}
+.type-tab.active {
+  background: var(--accent);
+  color: #1a0a00;
+  border-color: var(--accent);
+}
+.type-tab:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+
+/* QUESTION CARD */
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.q-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 16px;
+}
+.q-type-badge.fill { background: #1a2a1a; color: var(--green); }
+.q-type-badge.conv { background: #1a1a2a; color: var(--blue); }
+.q-type-badge.mcq  { background: #2a1a2a; color: #d89ffc; }
+
+.q-scene {
+  font-size: 13px;
+  color: var(--text-3);
+  font-style: italic;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+.q-text {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.blank-input {
+  display: inline-block;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-family: 'Nunito', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  min-width: 80px;
+  padding: 0 4px 2px;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.15s;
+  vertical-align: baseline;
+}
+.blank-input:focus { border-bottom-color: var(--accent-light); }
+.blank-input.correct { border-bottom-color: var(--green); color: var(--green); }
+.blank-input.wrong { border-bottom-color: var(--red); color: var(--red); }
+
+/* MCQ Options */
+.mcq-options { display: flex; flex-direction: column; gap: 10px; }
+.mcq-btn {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 12px;
+}
+.mcq-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--surface3); }
+.mcq-btn.correct { border-color: var(--green); background: #0d2e1a; color: var(--green); }
+.mcq-btn.wrong { border-color: var(--red); background: #2e0d1a; color: var(--red); }
+.mcq-btn:disabled { cursor: default; }
+.mcq-opt-letter {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--surface3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  color: var(--text-2);
+}
+.mcq-btn.correct .mcq-opt-letter { background: var(--green); color: #001a0d; }
+.mcq-btn.wrong .mcq-opt-letter { background: var(--red); color: #1a000d; }
+
+/* Conversation */
+.conv-dialogue {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.conv-line {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.conv-line.right { flex-direction: row-reverse; }
+.conv-speaker {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 55px;
+  padding-top: 10px;
+  flex-shrink: 0;
+}
+.conv-line.right .conv-speaker { text-align: right; }
+.conv-bubble {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 600;
+  max-width: calc(100% - 70px);
+}
+.conv-line.right .conv-bubble {
+  background: #1a1209;
+  border-color: #3a2810;
+}
+
+/* FEEDBACK */
+.q-feedback {
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 14px;
+  display: none;
+}
+.q-feedback.show { display: flex; align-items: flex-start; gap: 10px; }
+.q-feedback.correct { background: #0d2a1a; color: var(--green); border: 1px solid #1a4a2a; }
+.q-feedback.wrong { background: #2a0d1a; color: #fc8a9e; border: 1px solid #4a1a2a; }
+
+/* SUBMIT / NEXT */
+.q-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #1a0800;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.4; cursor: default; transform: none; }
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: var(--surface3); border-color: var(--accent); }
+
+/* ── RESULTS VIEW ── */
+.results-view {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  text-align: center;
+}
+.results-emoji { font-size: 72px; margin-bottom: 16px; display: block; }
+.results-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 32px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.results-sub { color: var(--text-2); font-size: 16px; margin-bottom: 36px; }
+.score-circle {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  margin: 0 auto 36px;
+  background: var(--surface);
+}
+.score-num {
+  font-family: 'Nunito', sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+}
+.score-denom { font-size: 15px; color: var(--text-3); font-weight: 700; }
+.results-breakdown {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+.rb-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text-2);
+  margin-bottom: 16px;
+}
+.rb-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.rb-item:last-child { border-bottom: none; }
+.rb-q { flex: 1; color: var(--text-2); }
+.rb-status {
+  font-weight: 800;
+  font-size: 13px;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+.rb-status.ok { background: #0d2a1a; color: var(--green); }
+.rb-status.no { background: #2a0d1a; color: var(--red); }
+
+/* ── HISTORY VIEW ── */
+.history-view {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+.history-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-3);
+  font-size: 16px;
+}
+.history-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hi-icon { font-size: 28px; flex-shrink: 0; }
+.hi-info { flex: 1; }
+.hi-topic {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.hi-meta { font-size: 12px; color: var(--text-3); }
+.hi-score {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0 24px;
+  overflow-x: auto;
+}
+.nav-tab {
+  padding: 14px 20px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--text-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.nav-tab:hover { color: var(--text-2); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 320px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .topics-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { gap: 8px; }
+  .stat-card { padding: 12px 16px; min-width: 100px; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+    ReflectLearn
+  </div>
+  <div class="header-actions">
+    <button class="btn-sm" onclick="exportData()">⬆ Export</button>
+    <label class="btn-sm" style="cursor:pointer">
+      ⬇ Import <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display:none">
+    </label>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showNav('home',this)">🏠 Home</button>
+  <button class="nav-tab" onclick="showNav('history',this)">📊 Progress</button>
+</nav>
+
+<!-- HOME VIEW -->
+<div id="view-home" class="view active">
+  <div class="home-hero">
+    <h1>Hello, Learner! 👋</h1>
+    <p>Practice English with fun conversations, fill-in-the-blanks, and quizzes across real-life situations!</p>
+  </div>
+  <div class="stats-bar" id="statsBar"></div>
+  <div style="max-width:960px;margin:0 auto;">
+    <div class="section-title">Choose a Topic</div>
+    <div class="topics-grid" id="topicsGrid"></div>
+  </div>
+</div>
+
+<!-- EXERCISE VIEW -->
+<div id="view-exercise" class="view">
+  <div class="exercise-view">
+    <div class="ex-header">
+      <button class="btn-back" onclick="goHome()">← Back</button>
+      <div class="ex-topic-badge" id="exTopicBadge"></div>
+    </div>
+    <div class="ex-progress-wrap">
+      <div class="ex-progress-bar"><div class="ex-progress-fill" id="exProgressFill" style="width:0%"></div></div>
+      <div class="ex-progress-label" id="exProgressLabel">0 / 0</div>
+    </div>
+    <div class="type-tabs" id="typeTabs"></div>
+    <div id="questionArea"></div>
+  </div>
+</div>
+
+<!-- RESULTS VIEW -->
+<div id="view-results" class="view">
+  <div class="results-view">
+    <span class="results-emoji" id="resultsEmoji">🎉</span>
+    <div class="results-title" id="resultsTitle">Great Job!</div>
+    <div class="results-sub" id="resultsSub"></div>
+    <div class="score-circle">
+      <div class="score-num" id="scoreNum">0</div>
+      <div class="score-denom" id="scoreDenom">out of 0</div>
+    </div>
+    <div class="results-breakdown" id="resultsBreakdown"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn-primary" onclick="retryTopic()">🔄 Try Again</button>
+      <button class="btn-secondary" onclick="goHome()">🏠 Choose Topic</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY VIEW -->
+<div id="view-history" class="view">
+  <div class="history-view">
+    <h2 style="font-weight:900;font-size:22px;margin-bottom:24px;">Your Progress 📊</h2>
+    <div id="historyChartWrap" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px;"></div>
+    <div id="historyList"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────
+// DATA
+// ─────────────────────────────────────
+const TOPICS = [
+  { id:'hotel', name:'At the Hotel', icon:'🏨', color:'#fca85c' },
+  { id:'station', name:'At the Station', icon:'🚂', color:'#5ca8fc' },
+  { id:'hospital', name:'At the Hospital', icon:'🏥', color:'#fc5c7d' },
+  { id:'home', name:'At Home (Guests)', icon:'🏠', color:'#5cfca8' },
+  { id:'school', name:'At School', icon:'🏫', color:'#d89ffc' },
+  { id:'market', name:'At the Market', icon:'🛒', color:'#fcf05c' },
+  { id:'restaurant', name:'At the Restaurant', icon:'🍽️', color:'#fc8a5c' },
+];
+
+const QUESTIONS = {
+  hotel: [
+    { type:'fill', scene:'You arrive at a hotel front desk.', text:'Receptionist: Good evening! Do you have a ___?<br>Guest: Yes, I made a reservation under the name Ravi.', blanks:['reservation'], hint:'booking' },
+    { type:'fill', scene:'Checking into your room.', text:'Guest: Can I have a room on a higher ___? I like the view.<br>Receptionist: Of course! Room 801 on the eighth floor is available.', blanks:['floor'], hint:'level' },
+    { type:'mcq', scene:'At the hotel restaurant.', text:'The waiter asks: "Would you like to see the menu?" You say:', options:['Yes, please. I am hungry.','No, I do not like food.','Menu is bad.','I want sleep now.'], answer:0 },
+    { type:'conv', scene:'Morning at the hotel. A guest calls room service.', dialogue:[
+      {speaker:'Guest', side:'right', text:'Hello, I would like to order _____ for breakfast, please.', blank:true, answer:'breakfast', hint:'the morning meal'},
+      {speaker:'Staff', side:'left', text:'Good morning! What would you like?'},
+      {speaker:'Guest', side:'right', text:'Can I have toast, orange juice, and some fruit?'},
+      {speaker:'Staff', side:'left', text:'Of course! It will be ready in 15 _____.',  blank:true, answer:'minutes', hint:'unit of time'},
+    ]},
+    { type:'mcq', scene:'Checking out of the hotel.', text:'You want to pay your bill. What do you say to the receptionist?', options:['I would like to check out, please.','Where is my bag?','Room is broken.','I want more towels.'], answer:0 },
+    { type:'fill', scene:'The porter helps with your bags.', text:'Porter: Shall I carry your ___ to the room?<br>Guest: Yes, thank you. That is very kind.', blanks:['bags'], hint:'luggage' },
+  ],
+  station: [
+    { type:'fill', scene:'You are at the railway station booking counter.', text:'Person: One ___ to Chennai, please.<br>Clerk: Single or return?<br>Person: Single, please.', blanks:['ticket'], hint:'travel pass' },
+    { type:'mcq', scene:'You cannot find your platform.', text:'You need to find Platform 3. What do you ask?', options:['Excuse me, which platform does the train to Chennai leave from?','Where is my food?','I want a train now.','Platform is far?'], answer:0 },
+    { type:'conv', scene:'Buying a ticket at the counter.', dialogue:[
+      {speaker:'Clerk', side:'left', text:'Good morning! Where would you like to go?'},
+      {speaker:'You', side:'right', text:'I would like to go to _____, please.', blank:true, answer:'Mumbai', hint:'a big city'},
+      {speaker:'Clerk', side:'left', text:'The next train leaves at 3 o\'clock. Would you like a window seat?'},
+      {speaker:'You', side:'right', text:'Yes, please. How much is the _____?', blank:true, answer:'fare', hint:'price/cost'},
+    ]},
+    { type:'fill', scene:'The train is arriving.', text:'Announcement: The express train to Bangalore is now arriving on ___ four.<br>Passengers: Let us hurry!', blanks:['platform'], hint:'track number area' },
+    { type:'mcq', scene:'You are on the train and need help.', text:'Your seat number is 24A but someone else is sitting there. What do you say?', options:['Excuse me, I think this is my seat.','Go away!','I am angry.','This train is wrong.'], answer:0 },
+    { type:'fill', scene:'Checking the timetable.', text:'The train ___ at 9:00 AM and arrives at 2:00 PM.<br>That is a five-hour journey.', blanks:['departs'], hint:'leaves / starts' },
+  ],
+  hospital: [
+    { type:'fill', scene:'You are at the hospital reception.', text:'Patient: I have an ___ with Dr. Kumar at 10 AM.<br>Receptionist: Please take a seat. The doctor will call you soon.', blanks:['appointment'], hint:'scheduled meeting' },
+    { type:'mcq', scene:'The doctor asks about your problem.', text:'The doctor says: "What seems to be the problem?" You have a fever. You say:', options:['I have a fever and a sore throat.','I want biscuits.','Doctor is late.','Medicine is bad.'], answer:0 },
+    { type:'conv', scene:'At the pharmacy after seeing the doctor.', dialogue:[
+      {speaker:'Pharmacist', side:'left', text:'Hello! Do you have a prescription?'},
+      {speaker:'You', side:'right', text:'Yes, here it is. The doctor gave me this _____.', blank:true, answer:'prescription', hint:'the doctor\'s written note'},
+      {speaker:'Pharmacist', side:'left', text:'I see. You need to take one tablet twice a day after meals.'},
+      {speaker:'You', side:'right', text:'Thank you. How many _____ does this medicine last?', blank:true, answer:'days', hint:'unit of time'},
+    ]},
+    { type:'fill', scene:'In the doctor\'s room.', text:'Doctor: Open your mouth and say ___, please.<br>Patient: Ahhh.<br>Doctor: Your throat looks a bit red.', blanks:['Ahh'], hint:'"Ahh" sound' },
+    { type:'mcq', scene:'The nurse takes your temperature.', text:'The nurse says your temperature is 38.5°C. That means you have a:', options:['Fever','Cold drink','Headache','Stomachache'], answer:0 },
+    { type:'fill', scene:'Getting a bandage.', text:'Nurse: Does it hurt when I touch here?<br>Patient: Yes, it is very _____. I fell down yesterday.', blanks:['painful'], hint:'opposite of comfortable' },
+  ],
+  home: [
+    { type:'fill', scene:'Father\'s friend Uncle Suresh is visiting your home.', text:'Mom: Beta, please say ___ to Uncle Suresh!<br>Child: Good evening, Uncle Suresh! Welcome to our home.', blanks:['hello'], hint:'greeting' },
+    { type:'conv', scene:'Offering snacks to a guest.', dialogue:[
+      {speaker:'You', side:'right', text:'Uncle, would you like some _____ or tea?', blank:true, answer:'biscuits', hint:'a snack'},
+      {speaker:'Uncle', side:'left', text:'Oh yes, thank you! Tea would be lovely.'},
+      {speaker:'You', side:'right', text:'How do you take your tea? With _____ and milk?', blank:true, answer:'sugar', hint:'sweet thing'},
+      {speaker:'Uncle', side:'left', text:'Just a little sugar, please. You are very polite!'},
+    ]},
+    { type:'mcq', scene:'Uncle Suresh compliments your drawing.', text:'Uncle Suresh says "What a beautiful drawing!" What is a polite reply?', options:['Thank you, Uncle! I drew it myself.','Go away.','It is nothing special.','I do not want to talk.'], answer:0 },
+    { type:'fill', scene:'Dad introduces his friend to the family.', text:'Dad: This is my old friend Suresh. We studied ___ together.<br>Uncle: Yes! Your dad and I were classmates for four years.', blanks:['together'], hint:'with each other' },
+    { type:'mcq', scene:'It is time for Uncle Suresh to leave.', text:'Uncle Suresh is leaving. What do you say?', options:['Goodbye Uncle! Please come again soon.','Bye.','I am sleepy.','Do not go.'], answer:0 },
+    { type:'fill', scene:'Showing a guest around the house.', text:'Child: This is our ___ room. You can sit and relax here.<br>Uncle: What a lovely space! Very comfortable.', blanks:['living'], hint:'main room for sitting' },
+  ],
+  school: [
+    { type:'fill', scene:'Morning at school. You see your teacher.', text:'Student: Good ___, Ma\'am!<br>Teacher: Good morning! Are you ready for the lesson today?', blanks:['morning'], hint:'time of day greeting' },
+    { type:'mcq', scene:'The teacher asks a question in class.', text:'You know the answer! What do you do?', options:['Raise your hand and say "May I answer, Ma\'am?"','Shout out the answer loudly.','Stay quiet and look away.','Ask your friend for the answer.'], answer:0 },
+    { type:'conv', scene:'Asking the teacher for help.', dialogue:[
+      {speaker:'You', side:'right', text:'Excuse me, Ma\'am. I do not _____ this question.', blank:true, answer:'understand', hint:'do not get / are confused by'},
+      {speaker:'Teacher', side:'left', text:'Of course! Let me explain. Which part is confusing?'},
+      {speaker:'You', side:'right', text:'I do not know how to solve this _____.', blank:true, answer:'problem', hint:'question/task'},
+      {speaker:'Teacher', side:'left', text:'No problem! Let us work through it step by step.'},
+    ]},
+    { type:'fill', scene:'Borrowing a pencil from a classmate.', text:'Priya: Can I ___ your pencil? I forgot mine at home.<br>Arjun: Sure! Here you go. I have an extra one.', blanks:['borrow'], hint:'take and return later' },
+    { type:'mcq', scene:'You are late to school.', text:'You walk into class late. What do you say to the teacher?', options:['I am sorry I am late, Ma\'am. May I come in?','I was sleeping!','The bus was bad.','Why are you here?'], answer:0 },
+    { type:'fill', scene:'At lunchtime.', text:'Friend: What did you bring for ___?<br>You: My mom packed rice and dal. What about you?', blanks:['lunch'], hint:'midday meal' },
+  ],
+  market: [
+    { type:'fill', scene:'You are at the vegetable market.', text:'Customer: How much do these ___ cost?<br>Vendor: Tomatoes are fifty rupees per kilogram, ma\'am.', blanks:['tomatoes'], hint:'red vegetable' },
+    { type:'mcq', scene:'The price seems too high.', text:'The vendor says mangoes cost 200 rupees per kg. You think it is too expensive. You say:', options:['That seems a bit expensive. Can you give a discount?','No! I hate mangoes.','200 rupees is very cheap.','I want bananas.'], answer:0 },
+    { type:'conv', scene:'Buying fruits at the market.', dialogue:[
+      {speaker:'Vendor', side:'left', text:'What would you like today?'},
+      {speaker:'You', side:'right', text:'I need two kilograms of _____, please.', blank:true, answer:'apples', hint:'a red or green fruit'},
+      {speaker:'Vendor', side:'left', text:'These are very fresh! Anything else?'},
+      {speaker:'You', side:'right', text:'Yes, also one dozen _____.', blank:true, answer:'bananas', hint:'yellow curved fruit'},
+    ]},
+    { type:'fill', scene:'Paying at the market.', text:'Customer: Here is five hundred rupees.<br>Vendor: Thank you. Your ___ is one hundred rupees.', blanks:['change'], hint:'money returned after payment' },
+    { type:'mcq', scene:'You cannot find what you need.', text:'You are looking for rice. What do you ask the shopkeeper?', options:['Excuse me, do you have rice?','Where is everything?','I want everything in the shop.','Rice is bad.'], answer:0 },
+    { type:'fill', scene:'Checking the quality of vegetables.', text:'Customer: Are these ___ fresh? They look a little old.<br>Vendor: Yes, they arrived this morning from the farm!', blanks:['carrots'], hint:'orange vegetable' },
+  ],
+  restaurant: [
+    { type:'fill', scene:'You enter a restaurant and the waiter greets you.', text:'Waiter: Good evening! How many people are in your ___?<br>Customer: There are four of us.', blanks:['group'], hint:'people together / party' },
+    { type:'mcq', scene:'Looking at the menu.', text:'You do not understand an item on the menu. What do you ask the waiter?', options:['Excuse me, what is in the paneer tikka?','Give me everything!','Menu is wrong.','I want food now.'], answer:0 },
+    { type:'conv', scene:'Ordering food at the restaurant.', dialogue:[
+      {speaker:'Waiter', side:'left', text:'Are you ready to order?'},
+      {speaker:'You', side:'right', text:'Yes, I would like the _____, please.', blank:true, answer:'dosa', hint:'a South Indian dish'},
+      {speaker:'Waiter', side:'left', text:'Excellent choice! And to drink?'},
+      {speaker:'You', side:'right', text:'I will have a glass of _____ water, please.', blank:true, answer:'cold', hint:'not hot'},
+    ]},
+    { type:'fill', scene:'The food is delicious!', text:'Customer: This biryani is absolutely ___! Please give my compliments to the chef.<br>Waiter: Thank you so much! I will let them know.', blanks:['delicious'], hint:'very tasty' },
+    { type:'mcq', scene:'You are done eating and want the bill.', text:'How do you ask for the bill?', options:['Excuse me, may we have the bill please?','Give me bill!','How much is everything?','I want to pay now!'], answer:0 },
+    { type:'fill', scene:'Leaving a restaurant.', text:'Customer: Thank you for the wonderful meal. We will definitely come ___.<br>Waiter: Thank you! We hope to see you again soon.', blanks:['back'], hint:'return' },
+  ],
+};
+
+// ─────────────────────────────────────
+// STATE
+// ─────────────────────────────────────
+let state = {
+  currentTopic: null,
+  currentType: 'fill',  // fill | conv | mcq
+  currentQIdx: 0,
+  session: [],    // {qIdx, correct}
+  answered: false,
+  history: [],
+  topicProgress: {},
+};
+
+function loadStorage() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('reflectlearn_v1') || '{}');
+    state.history = saved.history || [];
+    state.topicProgress = saved.topicProgress || {};
+  } catch(e) {}
+}
+function saveStorage() {
+  localStorage.setItem('reflectlearn_v1', JSON.stringify({
+    history: state.history,
+    topicProgress: state.topicProgress
+  }));
+}
+
+// ─────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────
+function showNav(name, btn) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  showView(name);
+  if (name === 'history') renderHistory();
+  if (name === 'home') renderHome();
+}
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+}
+
+function goHome() {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => { if(i===0) t.classList.add('active'); else t.classList.remove('active'); });
+  showView('home');
+  renderHome();
+}
+
+// ─────────────────────────────────────
+// HOME RENDER
+// ─────────────────────────────────────
+function renderHome() {
+  renderStats();
+  renderTopics();
+}
+
+function renderStats() {
+  const totalSessions = state.history.length;
+  const totalQ = state.history.reduce((a,h) => a + h.total, 0);
+  const totalCorrect = state.history.reduce((a,h) => a + h.score, 0);
+  const pct = totalQ ? Math.round(totalCorrect/totalQ*100) : 0;
+  const streak = calcStreak();
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${totalSessions}</div><div class="stat-label">Sessions</div></div>
+    <div class="stat-card"><div class="stat-val">${totalQ}</div><div class="stat-label">Questions</div></div>
+    <div class="stat-card"><div class="stat-val">${pct}%</div><div class="stat-label">Accuracy</div></div>
+    <div class="stat-card"><div class="stat-val">${streak} 🔥</div><div class="stat-label">Day Streak</div></div>
+  `;
+}
+
+function calcStreak() {
+  if (!state.history.length) return 0;
+  const days = [...new Set(state.history.map(h => h.date.split('T')[0]))].sort().reverse();
+  const today = new Date().toISOString().split('T')[0];
+  if (days[0] !== today && days[0] !== yesterday()) return 0;
+  let streak = 1;
+  for (let i = 1; i < days.length; i++) {
+    const d1 = new Date(days[i-1]), d2 = new Date(days[i]);
+    const diff = (d1 - d2) / 86400000;
+    if (diff === 1) streak++;
+    else break;
+  }
+  return streak;
+}
+function yesterday() {
+  const d = new Date(); d.setDate(d.getDate()-1);
+  return d.toISOString().split('T')[0];
+}
+
+function renderTopics() {
+  const grid = document.getElementById('topicsGrid');
+  grid.innerHTML = TOPICS.map(t => {
+    const tp = state.topicProgress[t.id] || { done:0, total: QUESTIONS[t.id].length };
+    const pct = tp.total ? Math.round(tp.done/tp.total*100) : 0;
+    return `<div class="topic-card" style="--topic-color:${t.color}" onclick="startTopic('${t.id}')">
+      <span class="topic-icon">${t.icon}</span>
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-meta">${QUESTIONS[t.id].length} exercises</div>
+      <div class="topic-progress"><div class="topic-progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────
+// EXERCISE
+// ─────────────────────────────────────
+function startTopic(topicId) {
+  state.currentTopic = topicId;
+  state.currentType = 'fill';
+  state.session = [];
+  state.currentQIdx = 0;
+  state.answered = false;
+  showView('exercise');
+  const topic = TOPICS.find(t => t.id === topicId);
+  document.getElementById('exTopicBadge').innerHTML = `${topic.icon} ${topic.name}`;
+  renderTypeTabs();
+  renderQuestion();
+}
+
+function retryTopic() {
+  if (state.currentTopic) startTopic(state.currentTopic);
+}
+
+function getQuestionsForType(type) {
+  return QUESTIONS[state.currentTopic].filter(q => q.type === type);
+}
+
+function renderTypeTabs() {
+  const types = [
+    {id:'fill', label:'✏️ Fill in Blanks'},
+    {id:'conv', label:'💬 Conversations'},
+    {id:'mcq',  label:'✅ Quiz'},
+  ];
+  document.getElementById('typeTabs').innerHTML = types.map(t => `
+    <button class="type-tab ${state.currentType === t.id ? 'active' : ''}" onclick="switchType('${t.id}')">${t.label}</button>
+  `).join('');
+}
+
+function switchType(type) {
+  state.currentType = type;
+  state.currentQIdx = 0;
+  state.answered = false;
+  state.session = [];
+  renderTypeTabs();
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qs = getQuestionsForType(state.currentType);
+  const total = qs.length;
+  const idx = state.currentQIdx;
+
+  // Progress
+  document.getElementById('exProgressFill').style.width = total ? ((idx/total)*100)+'%' : '0%';
+  document.getElementById('exProgressLabel').textContent = idx + ' / ' + total;
+
+  if (idx >= total) {
+    showResults();
+    return;
+  }
+
+  const q = qs[idx];
+  const area = document.getElementById('questionArea');
+  area.innerHTML = buildQuestionHTML(q, idx);
+  state.answered = false;
+}
+
+function buildQuestionHTML(q, idx) {
+  const typeLabels = { fill:'Fill in the Blanks', conv:'Conversation', mcq:'Multiple Choice' };
+  const typeClass  = { fill:'fill', conv:'conv', mcq:'mcq' };
+
+  let inner = '';
+  if (q.type === 'fill') {
+    let txt = q.text;
+    q.blanks.forEach((b,i) => {
+      txt = txt.replace('___', `<input class="blank-input" id="blank_${i}" placeholder="___" oninput="autoResize(this)" autocomplete="off">`);
+    });
+    inner = `<div class="q-text">${txt}</div>
+    <div class="q-actions">
+      <button class="btn-primary" onclick="checkFill(${JSON.stringify(q.blanks).replace(/"/g,'&quot;')})">Check ✓</button>
+    </div>
+    <div class="q-feedback" id="feedback"></div>`;
+  } else if (q.type === 'mcq') {
+    const letters = ['A','B','C','D'];
+    inner = `<div class="q-text">${q.text}</div>
+    <div class="mcq-options">
+      ${q.options.map((o,i) => `<button class="mcq-btn" id="opt_${i}" onclick="checkMCQ(${i},${q.answer})" type="button">
+        <span class="mcq-opt-letter">${letters[i]}</span>${o}
+      </button>`).join('')}
+    </div>
+    <div class="q-feedback" id="feedback"></div>`;
+  } else if (q.type === 'conv') {
+    let blankIdx = 0;
+    const lines = q.dialogue.map(line => {
+      if (line.blank) {
+        const bi = blankIdx++;
+        return `<div class="conv-line ${line.side}">
+          <div class="conv-speaker">${line.speaker}</div>
+          <div class="conv-bubble">${line.text.replace('_____',`<input class="blank-input" id="cblank_${bi}" placeholder="___" oninput="autoResize(this)" autocomplete="off">`)}</div>
+        </div>`;
+      }
+      return `<div class="conv-line ${line.side}">
+        <div class="conv-speaker">${line.speaker}</div>
+        <div class="conv-bubble">${line.text}</div>
+      </div>`;
+    });
+    const answers = q.dialogue.filter(l=>l.blank).map(l=>l.answer);
+    inner = `<div class="conv-dialogue">${lines.join('')}</div>
+    <div class="q-actions">
+      <button class="btn-primary" onclick="checkConv(${JSON.stringify(answers).replace(/"/g,'&quot;')})">Check ✓</button>
+    </div>
+    <div class="q-feedback" id="feedback"></div>`;
+  }
+
+  return `<div class="q-card">
+    <span class="q-type-badge ${typeClass[q.type]}">${typeLabels[q.type]}</span>
+    ${q.scene ? `<div class="q-scene">📍 ${q.scene}</div>` : ''}
+    ${inner}
+  </div>`;
+}
+
+function autoResize(input) {
+  input.style.width = Math.max(80, input.value.length * 14 + 20) + 'px';
+}
+
+function checkFill(blanks) {
+  if (state.answered) return;
+  let allCorrect = true;
+  blanks.forEach((b, i) => {
+    const input = document.getElementById('blank_'+i);
+    if (!input) return;
+    const val = input.value.trim().toLowerCase();
+    const correct = b.toLowerCase();
+    if (val === correct || val === correct.replace(/[.,!?]/g,'')) {
+      input.classList.add('correct'); input.classList.remove('wrong');
+    } else {
+      input.classList.add('wrong'); input.classList.remove('correct');
+      allCorrect = false;
+    }
+    input.disabled = true;
+  });
+  showFeedback(allCorrect, blanks.join(', '));
+  recordAnswer(allCorrect);
+}
+
+function checkMCQ(chosen, correct) {
+  if (state.answered) return;
+  const opts = document.querySelectorAll('.mcq-btn');
+  opts.forEach((btn, i) => {
+    if (i === correct) btn.classList.add('correct');
+    else if (i === chosen && chosen !== correct) btn.classList.add('wrong');
+    btn.disabled = true;
+  });
+  showFeedback(chosen === correct, null);
+  recordAnswer(chosen === correct);
+}
+
+function checkConv(answers) {
+  if (state.answered) return;
+  let allCorrect = true;
+  answers.forEach((ans, i) => {
+    const input = document.getElementById('cblank_'+i);
+    if (!input) return;
+    const val = input.value.trim().toLowerCase();
+    const correct = ans.toLowerCase();
+    if (val === correct || val === correct.replace(/[.,!?]/g,'')) {
+      input.classList.add('correct'); input.classList.remove('wrong');
+    } else {
+      input.classList.add('wrong'); input.classList.remove('correct');
+      allCorrect = false;
+    }
+    input.disabled = true;
+  });
+  showFeedback(allCorrect, answers.join(' / '));
+  recordAnswer(allCorrect);
+}
+
+function showFeedback(correct, answer) {
+  state.answered = true;
+  const fb = document.getElementById('feedback');
+  if (!fb) return;
+  if (correct) {
+    fb.className = 'q-feedback correct show';
+    fb.innerHTML = '🎉 Well done! That\'s correct!';
+  } else {
+    fb.className = 'q-feedback wrong show';
+    fb.innerHTML = answer ? `💡 The answer is: <strong>${answer}</strong>` : '💡 Not quite! The correct answer is highlighted above.';
+  }
+  // Add next button
+  const actions = document.querySelector('.q-actions');
+  if (actions) {
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn-secondary';
+    nextBtn.textContent = isLastQuestion() ? '🏁 See Results' : 'Next →';
+    nextBtn.onclick = nextQuestion;
+    actions.appendChild(nextBtn);
+  }
+}
+
+function isLastQuestion() {
+  const qs = getQuestionsForType(state.currentType);
+  return state.currentQIdx >= qs.length - 1;
+}
+
+function recordAnswer(correct) {
+  state.session.push({ idx: state.currentQIdx, correct });
+}
+
+function nextQuestion() {
+  state.currentQIdx++;
+  state.answered = false;
+  renderQuestion();
+}
+
+// ─────────────────────────────────────
+// RESULTS
+// ─────────────────────────────────────
+function showResults() {
+  const score = state.session.filter(s => s.correct).length;
+  const total = state.session.length;
+  const pct = total ? Math.round(score/total*100) : 0;
+
+  // emoji + message
+  let emoji, title, sub;
+  if (pct >= 90) { emoji='🏆'; title='Champion!'; sub='Perfect score! You are amazing!'; }
+  else if (pct >= 70) { emoji='🌟'; title='Great Job!'; sub='Really well done! Keep it up!'; }
+  else if (pct >= 50) { emoji='👍'; title='Good Try!'; sub='Getting better! Try again to improve!'; }
+  else { emoji='💪'; title='Keep Practising!'; sub='Don\'t give up! Every try makes you better!'; }
+
+  document.getElementById('resultsEmoji').textContent = emoji;
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('resultsSub').textContent = sub;
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreDenom').textContent = 'out of ' + total;
+
+  // Breakdown
+  const qs = getQuestionsForType(state.currentType);
+  const brkHtml = state.session.map((s,i) => {
+    const q = qs[s.idx];
+    const preview = q ? (q.scene || q.text || '').replace(/<[^>]*>/g,'').substring(0,60) + '…' : '';
+    return `<div class="rb-item">
+      <div class="rb-q">${i+1}. ${preview}</div>
+      <span class="rb-status ${s.correct?'ok':'no'}">${s.correct?'✓ Correct':'✗ Wrong'}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('resultsBreakdown').innerHTML = `<div class="rb-title">Question Breakdown</div>${brkHtml}`;
+
+  // Save to history
+  const topic = TOPICS.find(t => t.id === state.currentTopic);
+  state.history.unshift({
+    topic: state.currentTopic,
+    topicName: topic ? topic.name : '',
+    topicIcon: topic ? topic.icon : '📚',
+    type: state.currentType,
+    score, total,
+    date: new Date().toISOString(),
+  });
+  if (state.history.length > 100) state.history = state.history.slice(0,100);
+
+  // Update topic progress
+  if (!state.topicProgress[state.currentTopic]) state.topicProgress[state.currentTopic] = { done:0, total:0 };
+  state.topicProgress[state.currentTopic].done = Math.min(total, score + (state.topicProgress[state.currentTopic].done || 0));
+  state.topicProgress[state.currentTopic].total = QUESTIONS[state.currentTopic].length;
+  saveStorage();
+  showView('results');
+}
+
+// ─────────────────────────────────────
+// HISTORY
+// ─────────────────────────────────────
+function renderHistory() {
+  // Mini chart
+  const chartWrap = document.getElementById('historyChartWrap');
+  if (state.history.length === 0) {
+    chartWrap.innerHTML = '<p style="color:var(--text-3);text-align:center;padding:20px;">No sessions yet. Start learning!</p>';
+    document.getElementById('historyList').innerHTML = '<div class="history-empty">No history yet.<br>Start a topic to track your progress!</div>';
+    return;
+  }
+  // Last 7 sessions bar chart
+  const recent = state.history.slice(0,7).reverse();
+  const maxScore = Math.max(...recent.map(h => h.total));
+  const bars = recent.map(h => {
+    const pct = h.total ? Math.round(h.score/h.total*100) : 0;
+    const d = new Date(h.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+      <span style="font-size:11px;font-weight:700;color:var(--accent)">${pct}%</span>
+      <div style="width:32px;background:var(--surface3);border-radius:6px;height:80px;display:flex;align-items:flex-end;overflow:hidden;">
+        <div style="width:100%;background:var(--accent);border-radius:6px;height:${pct}%;transition:height 0.4s;"></div>
+      </div>
+      <span style="font-size:10px;color:var(--text-3);text-align:center">${d}</span>
+    </div>`;
+  }).join('');
+  chartWrap.innerHTML = `<div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;color:var(--text-2);margin-bottom:16px;">Recent Sessions — Score %</div>
+  <div style="display:flex;gap:8px;align-items:flex-end;">${bars}</div>`;
+
+  // List
+  document.getElementById('historyList').innerHTML = state.history.slice(0,20).map(h => {
+    const pct = h.total ? Math.round(h.score/h.total*100) : 0;
+    const d = new Date(h.date).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    const typeLabel = {fill:'Fill in Blanks', conv:'Conversation', mcq:'Quiz'}[h.type] || h.type;
+    return `<div class="history-item">
+      <div class="hi-icon">${h.topicIcon}</div>
+      <div class="hi-info">
+        <div class="hi-topic">${h.topicName}</div>
+        <div class="hi-meta">${typeLabel} · ${d}</div>
+      </div>
+      <div class="hi-score">${h.score}/${h.total} <span style="font-size:14px;color:var(--text-3)">(${pct}%)</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────
+// IMPORT / EXPORT
+// ─────────────────────────────────────
+function exportData() {
+  const data = JSON.stringify({ history: state.history, topicProgress: state.topicProgress }, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = 'reflectlearn-data.json'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Data exported successfully!');
+}
+
+function importData(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.history) state.history = data.history;
+      if (data.topicProgress) state.topicProgress = data.topicProgress;
+      saveStorage();
+      renderHome();
+      showToast('Data imported successfully!');
+    } catch(err) {
+      showToast('Import failed. Invalid file.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─────────────────────────────────────
+// INIT
+// ─────────────────────────────────────
+loadStorage();
+renderHome();
+</script>
+</body>
+</html>
