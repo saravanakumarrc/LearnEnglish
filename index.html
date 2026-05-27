@@ -713,60 +713,14 @@ h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
   </div>
 </div>
 
+<script src="topics.js"></script>
+<script src="questions.js"></script>
 <script>
 // ─────────────────────────────────────
 // DATA
 // ─────────────────────────────────────
-// Data will be loaded from JSON files
-let TOPICS = [];
-let QUESTIONS = {};
-
-// Load data from JSON files
-async function loadData() {
-  try {
-    console.log('Loading data files...');
-    const [topicsRes, questionsRes] = await Promise.all([
-      fetch('topics.json'),
-      fetch('questions.json')
-    ]);
-    
-    console.log('Topics response:', topicsRes.status, topicsRes.ok);
-    console.log('Questions response:', questionsRes.status, questionsRes.ok);
-    
-    if (!topicsRes.ok) {
-      throw new Error(`Failed to load topics.json: ${topicsRes.status} ${topicsRes.statusText}`);
-    }
-    if (!questionsRes.ok) {
-      throw new Error(`Failed to load questions.json: ${questionsRes.status} ${questionsRes.statusText}`);
-    }
-    
-    TOPICS = await topicsRes.json();
-    QUESTIONS = await questionsRes.json();
-    
-    console.log('Data loaded successfully:', TOPICS.length, 'topics');
-    
-    // Initialize the app after data is loaded
-    loadStorage();
-    renderHome();
-  } catch (error) {
-    console.error('Error loading data:', error);
-    const isFileProtocol = window.location.protocol === 'file:';
-    const errorMsg = isFileProtocol 
-      ? '<p style="color:#a0a0c0;font-size:13px;margin-top:16px;">🔧 <strong>HOW TO FIX:</strong><br>Open Terminal and run:<br><code style="background:#1e1e2a;padding:8px;display:inline-block;border-radius:6px;">python -m http.server 8000</code><br>Then visit <strong>http://localhost:8000</strong></p>'
-      : '<p style="color:#a0a0c0;font-size:14px;">Make sure topics.json and questions.json are in the same folder as index.html</p>';
-    
-    document.body.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#f0f0f8;text-align:center;">
-      <div style="max-width:500px;">
-        <h2>⚠️ Error Loading App</h2>
-        <p style="margin:12px 0;">Could not load topics.json or questions.json</p>
-        <p style="color:#fc5c7d;font-size:13px;font-family:monospace;background:#1e1e2a;padding:12px;border-radius:8px;margin:16px 0;">
-          ${error.message}
-        </p>
-        ${errorMsg}
-      </div>
-    </div>`;
-  }
-}
+// TOPICS and QUESTIONS are loaded from topics.js and questions.js files
+// (no need to redeclare them - just use them directly)
 
 // ─────────────────────────────────────
 // STATE
@@ -1222,8 +1176,8 @@ function showToast(msg) {
 // ─────────────────────────────────────
 // INIT
 // ─────────────────────────────────────
-// Load data from JSON files and initialize the app
-loadData();
+loadStorage();
+renderHome();
 </script>
 </body>
 </html>
