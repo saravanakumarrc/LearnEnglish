@@ -440,6 +440,18 @@ h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
 .q-feedback.correct { background: #0d2a1a; color: var(--green); border: 1px solid #1a4a2a; }
 .q-feedback.wrong { background: #2a0d1a; color: #fc8a9e; border: 1px solid #4a1a2a; }
 
+/* HINT */
+.q-hint {
+  margin-top: 10px;
+  color: var(--text-2);
+  font-size: 13px;
+  background: var(--surface2);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: none;
+}
+.q-hint.show { display: block; }
+
 /* SUBMIT / NEXT */
 .q-actions {
   display: flex;
@@ -890,10 +902,33 @@ function renderQuestion() {
   state.answered = false;
 }
 
+function getHintForQuestion(q) {
+  if (!q) return null;
+  if (q.hint) return q.hint;
+  if (q.type === 'conv' && Array.isArray(q.dialogue)) {
+    const hints = q.dialogue.filter(d => d.hint).map(d => d.hint);
+    return hints.length ? hints.join(' | ') : null;
+  }
+  return null;
+}
+
+function showHint(hint) {
+  if (!hint) { showToast('No hint available.'); return; }
+  const hintEl = document.getElementById('hintBox');
+  if (hintEl) {
+    hintEl.textContent = '💡 ' + hint;
+    hintEl.className = 'q-hint show';
+    setTimeout(() => { hintEl.classList.remove('show'); }, 6000);
+    return;
+  }
+  showToast('💡 ' + hint);
+}
+
 function buildQuestionHTML(q, idx) {
   const typeLabels = { fill:'Fill in the Blanks', conv:'Conversation', mcq:'Multiple Choice' };
   const typeClass  = { fill:'fill', conv:'conv', mcq:'mcq' };
 
+  const hint = getHintForQuestion(q);
   let inner = '';
   if (q.type === 'fill') {
     const parts = q.text.split('___');
@@ -902,8 +937,10 @@ function buildQuestionHTML(q, idx) {
     inner = `<div class="q-text">${txt}</div>
     <div class="q-actions">
       <button class="btn-primary" onclick="checkFill(${JSON.stringify(q.blanks).replace(/"/g,'&quot;')})">Check ✓</button>
+      ${hint ? `<button class="btn-sm" onclick="showHint(${JSON.stringify(hint).replace(/"/g,'&quot;')})">💡 Hint</button>` : ''}
     </div>
-    <div class="q-feedback" id="feedback"></div>`;
+    <div class="q-feedback" id="feedback"></div>
+    <div class="q-hint" id="hintBox"></div>`;
   } else if (q.type === 'mcq') {
     const letters = ['A','B','C','D'];
     inner = `<div class="q-text">${q.text}</div>
@@ -912,7 +949,11 @@ function buildQuestionHTML(q, idx) {
         <span class="mcq-opt-letter">${letters[i]}</span>${o}
       </button>`).join('')}
     </div>
-    <div class="q-feedback" id="feedback"></div>`;
+    <div class="q-actions">
+      ${hint ? `<button class="btn-sm" onclick="showHint(${JSON.stringify(hint).replace(/"/g,'&quot;')})">💡 Hint</button>` : ''}
+    </div>
+    <div class="q-feedback" id="feedback"></div>
+    <div class="q-hint" id="hintBox"></div>`;
   } else if (q.type === 'conv') {
     let blankIdx = 0;
     const answers = [];
@@ -936,8 +977,10 @@ function buildQuestionHTML(q, idx) {
     inner = `<div class="conv-dialogue">${lines.join('')}</div>
     <div class="q-actions">
       <button class="btn-primary" onclick="checkConv(${JSON.stringify(answers).replace(/"/g,'&quot;')})">Check ✓</button>
+      ${hint ? `<button class="btn-sm" onclick="showHint(${JSON.stringify(hint).replace(/"/g,'&quot;')})">💡 Hint</button>` : ''}
     </div>
-    <div class="q-feedback" id="feedback"></div>`;
+    <div class="q-feedback" id="feedback"></div>
+    <div class="q-hint" id="hintBox"></div>`;
   }
 
   return `<div class="q-card">
