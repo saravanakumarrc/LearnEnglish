@@ -867,6 +867,15 @@ function renderTypeTabs() {
     {id:'fill', label:'✏️ Fill in Blanks'},
     {id:'conv', label:'💬 Conversations'},
     {id:'mcq',  label:'✅ Quiz'},
+    {id:'speak', label:'🗣️ Speak'},
+    {id:'bestresponse', label:'🤝 Best Response'},
+    {id:'situation', label:'🧠 Situation'},
+    {id:'synonym', label:'🧩 Synonym'},
+    {id:'opposite', label:'↔️ Opposite'},
+    {id:'correctsentence', label:'✅ Correct Sentence'},
+    {id:'chooseword', label:'🔤 Choose Word'},
+    {id:'sequence', label:'🔢 Sequence'},
+    {id:'roleplay', label:'🎭 Roleplay'},
   ];
   document.getElementById('typeTabs').innerHTML = types.map(t => `
     <button class="type-tab ${state.currentType === t.id ? 'active' : ''}" onclick="switchType('${t.id}')">${t.label}</button>
@@ -925,8 +934,34 @@ function showHint(hint) {
 }
 
 function buildQuestionHTML(q, idx) {
-  const typeLabels = { fill:'Fill in the Blanks', conv:'Conversation', mcq:'Multiple Choice' };
-  const typeClass  = { fill:'fill', conv:'conv', mcq:'mcq' };
+  const typeLabels = {
+    fill:'Fill in the Blanks',
+    conv:'Conversation',
+    mcq:'Multiple Choice',
+    speak:'Speak',
+    bestresponse:'Best Response',
+    situation:'Situation',
+    synonym:'Synonym',
+    opposite:'Opposite',
+    correctsentence:'Correct Sentence',
+    chooseword:'Choose Word',
+    sequence:'Sequence',
+    roleplay:'Roleplay'
+  };
+  const typeClass  = {
+    fill:'fill',
+    conv:'conv',
+    mcq:'mcq',
+    speak:'speak',
+    bestresponse:'mcq',
+    situation:'mcq',
+    synonym:'mcq',
+    opposite:'mcq',
+    correctsentence:'mcq',
+    chooseword:'mcq',
+    sequence:'mcq',
+    roleplay:'roleplay'
+  };
 
   const hint = getHintForQuestion(q);
   let inner = '';
@@ -941,12 +976,12 @@ function buildQuestionHTML(q, idx) {
     </div>
     <div class="q-feedback" id="feedback"></div>
     <div class="q-hint" id="hintBox"></div>`;
-  } else if (q.type === 'mcq') {
-    const letters = ['A','B','C','D'];
+  } else if (['mcq','bestresponse','situation','synonym','opposite','correctsentence','chooseword','sequence'].includes(q.type)) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     inner = `<div class="q-text">${q.text}</div>
     <div class="mcq-options">
       ${q.options.map((o,i) => `<button class="mcq-btn" id="opt_${i}" onclick="checkMCQ(${i},${q.answer})" type="button">
-        <span class="mcq-opt-letter">${letters[i]}</span>${o}
+        <span class="mcq-opt-letter">${letters[i] || ''}</span>${o}
       </button>`).join('')}
     </div>
     <div class="q-actions">
@@ -981,13 +1016,27 @@ function buildQuestionHTML(q, idx) {
     </div>
     <div class="q-feedback" id="feedback"></div>
     <div class="q-hint" id="hintBox"></div>`;
+  } else if (q.type === 'speak' || q.type === 'roleplay') {
+    inner = `<div class="q-text">${q.text}</div>
+    <div class="q-actions">
+      <button class="btn-primary" onclick="completePractice()">Mark as Done</button>
+      ${hint ? `<button class="btn-sm" onclick="showHint(${JSON.stringify(hint).replace(/"/g,'&quot;')})">💡 Hint</button>` : ''}
+    </div>
+    <div class="q-feedback" id="feedback"></div>
+    <div class="q-hint" id="hintBox"></div>`;
   }
 
   return `<div class="q-card">
-    <span class="q-type-badge ${typeClass[q.type]}">${typeLabels[q.type]}</span>
+    <span class="q-type-badge ${typeClass[q.type]}">${typeLabels[q.type] || q.type}</span>
     ${q.scene ? `<div class="q-scene">📍 ${q.scene}</div>` : ''}
     ${inner}
   </div>`;
+}
+
+function completePractice() {
+  if (state.answered) return;
+  showFeedback(true, null, '✅ Practice complete!');
+  recordAnswer(true);
 }
 
 function autoResize(input) {
@@ -1046,11 +1095,14 @@ function checkConv(answers) {
   recordAnswer(allCorrect);
 }
 
-function showFeedback(correct, answer) {
+function showFeedback(correct, answer, message) {
   state.answered = true;
   const fb = document.getElementById('feedback');
   if (!fb) return;
-  if (correct) {
+  if (message) {
+    fb.className = 'q-feedback correct show';
+    fb.innerHTML = message;
+  } else if (correct) {
     fb.className = 'q-feedback correct show';
     fb.innerHTML = '🎉 Well done! That\'s correct!';
   } else {
@@ -1168,7 +1220,20 @@ function renderHistory() {
   document.getElementById('historyList').innerHTML = state.history.slice(0,20).map(h => {
     const pct = h.total ? Math.round(h.score/h.total*100) : 0;
     const d = new Date(h.date).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-    const typeLabel = {fill:'Fill in Blanks', conv:'Conversation', mcq:'Quiz'}[h.type] || h.type;
+    const typeLabel = {
+      fill:'Fill in Blanks',
+      conv:'Conversation',
+      mcq:'Quiz',
+      speak:'Speak',
+      bestresponse:'Best Response',
+      situation:'Situation',
+      synonym:'Synonym',
+      opposite:'Opposite',
+      correctsentence:'Correct Sentence',
+      chooseword:'Choose Word',
+      sequence:'Sequence',
+      roleplay:'Roleplay'
+    }[h.type] || h.type;
     return `<div class="history-item">
       <div class="hi-icon">${h.topicIcon}</div>
       <div class="hi-info">

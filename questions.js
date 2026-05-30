@@ -1,18 +1,268 @@
 const QUESTIONS = {
   "hotel": [
-    { "type": "fill", "scene": "Arriving at a hotel.", "text": "Guest: Good evening. I have ___ reservation for two nights.<br>Receptionist: Welcome! Let me find your booking.", "blanks": ["a"], "hint": "article before 'reservation'" },
-    { "type": "fill", "scene": "At the front desk.", "text": "Guest: Can I have ___ room with a view of the lake?<br>Receptionist: Of course! Room 305 is perfect.", "blanks": ["a"], "hint": "article - singular room" },
-    { "type": "fill", "scene": "Getting room keys.", "text": "Receptionist: Here are ___ keys to your room. The elevator is ___ the left.<br>Guest: Thank you very much.", "blanks": ["the", "on"], "hint": "definite article and preposition" },
-    { "type": "mcq", "scene": "Asking about breakfast.", "text": "You ask: 'Is breakfast included ___ my stay?'", "options": ["in", "on", "at", "for"], "answer": 0 },
-    { "type": "fill", "scene": "In the hotel room.", "text": "Guest: There's ___ air conditioner ___ the room. It's ___ hot today.", "blanks": ["an", "in", "very"], "hint": "articles and prepositions" },
-    { "type": "fill", "scene": "Using hotel services.", "text": "Guest: I need ___ iron for my clothes. Is it ___ my room?<br>Staff: Let me bring one for you.", "blanks": ["an", "in"], "hint": "article and preposition" },
-    { "type": "mcq", "scene": "Dining at the hotel.", "text": "You say: 'What time is dinner ___ the restaurant?'", "options": ["in", "on", "at", "by"], "answer": 2 },
-    { "type": "fill", "scene": "Room service call.", "text": "Guest: I'd like to order ___ sandwich and ___ cup of tea, please.<br>Staff: Right away, sir.", "blanks": ["a", "a"], "hint": "articles for singular nouns" },
-    { "type": "fill", "scene": "Late night assistance.", "text": "Guest: There's ___ problem ___ the bathroom. Can someone help me?<br>Staff: Yes, I'll send help immediately.", "blanks": ["a", "with"], "hint": "article and preposition" },
-    { "type": "mcq", "scene": "Asking for directions.", "text": "You ask: 'Where is the swimming pool?'  Staff says: 'It's ___ the second floor.'", "options": ["on", "in", "at", "by"], "answer": 0 },
-    { "type": "fill", "scene": "Checkout time.", "text": "Receptionist: Checkout is ___ 11 AM. You have ___ hour left to pack.<br>Guest: I'll be ready on time.", "blanks": ["at", "an"], "hint": "preposition and article" },
-    { "type": "fill", "scene": "Settling the bill.", "text": "Receptionist: The bill includes ___ room, breakfast, and ___ room service charges.<br>Guest: Thank you for the excellent service.", "blanks": ["the", "the"], "hint": "definite articles" }
-  ],
+  {
+    "type":"fill",
+    "scene":"At the hotel reception.",
+    "text":"Receptionist: Welcome! Do you have a ___?",
+    "blanks":["reservation"],
+    "hint":"booking"
+  },
+  {
+    "type":"fill",
+    "scene":"Checking in.",
+    "text":"Receptionist: Here is your room ___.",
+    "blanks":["key"],
+    "hint":"used to open a door"
+  },
+  {
+    "type":"mcq",
+    "scene":"Hotel vocabulary.",
+    "text":"Who helps carry luggage in a hotel?",
+    "options":["Porter","Chef","Doctor","Teacher"],
+    "answer":0
+  },
+  {
+    "type":"fill",
+    "scene":"Articles.",
+    "text":"We booked ___ room for two nights.",
+    "blanks":["a"],
+    "hint":"one room"
+  },
+  {
+    "type":"fill",
+    "scene":"Articles.",
+    "text":"Please take ___ elevator to the third floor.",
+    "blanks":["the"],
+    "hint":"specific elevator"
+  },
+  {
+    "type":"fill",
+    "scene":"Prepositions.",
+    "text":"The restaurant is ___ the first floor.",
+    "blanks":["on"],
+    "hint":"floor location"
+  },
+  {
+    "type":"fill",
+    "scene":"Prepositions.",
+    "text":"Your bags are ___ the room.",
+    "blanks":["in"],
+    "hint":"inside"
+  },
+  {
+    "type":"mcq",
+    "scene":"Prepositions.",
+    "text":"The hotel is ___ the beach.",
+    "options":["near","eat","beautiful","quickly"],
+    "answer":0
+  },
+  {
+    "type":"fill",
+    "scene":"Adjectives.",
+    "text":"The room is very ___ and comfortable.",
+    "blanks":["clean"],
+    "hint":"not dirty"
+  },
+  {
+    "type":"mcq",
+    "scene":"Adjectives.",
+    "text":"Which word is an adjective?",
+    "options":["spacious","quickly","under","because"],
+    "answer":0
+  },
+  {
+    "type":"fill",
+    "scene":"Adverbs.",
+    "text":"The receptionist spoke very ___.",
+    "blanks":["politely"],
+    "hint":"good manners"
+  },
+  {
+    "type":"mcq",
+    "scene":"Adverbs.",
+    "text":"Which word is an adverb?",
+    "options":["politely","polite","hotel","room"],
+    "answer":0
+  },
+  {
+    "type":"conv",
+    "scene":"Checking in.",
+    "dialogue":[
+      {
+        "speaker":"Guest",
+        "side":"right",
+        "text":"Can I have a room on a higher ___?",
+        "blank":true,
+        "answer":"floor",
+        "hint":"level"
+      },
+      {
+        "speaker":"Receptionist",
+        "side":"left",
+        "text":"Certainly."
+      },
+      {
+        "speaker":"Guest",
+        "side":"right",
+        "text":"Thank you for your ___.",
+        "blank":true,
+        "answer":"help",
+        "hint":"assistance"
+      }
+    ]
+  },
+  {
+    "type":"conv",
+    "scene":"Room service.",
+    "dialogue":[
+      {
+        "speaker":"Guest",
+        "side":"right",
+        "text":"I would like some extra ___.",
+        "blank":true,
+        "answer":"towels",
+        "hint":"used after a bath"
+      },
+      {
+        "speaker":"Staff",
+        "side":"left",
+        "text":"Certainly. We will send them right away."
+      }
+    ]
+  },
+  {
+    "type":"fill",
+    "scene":"Past tense.",
+    "text":"Last year we ___ in this hotel.",
+    "blanks":["stayed"],
+    "hint":"past tense of stay"
+  },
+  {
+    "type":"mcq",
+    "scene":"Future tense.",
+    "text":"Next month we ___ here again.",
+    "options":["will stay","stayed","staying","stays"],
+    "answer":0
+  },
+  {
+    "type":"mcq",
+    "scene":"Polite communication.",
+    "text":"How should you ask for extra pillows?",
+    "options":[
+      "Could I please have an extra pillow?",
+      "Bring pillow now!",
+      "Pillow!",
+      "I need this."
+    ],
+    "answer":0
+  },
+  {
+    "type":"mcq",
+    "scene":"Situation understanding.",
+    "text":"Why do people stay in hotels?",
+    "options":[
+      "For temporary accommodation",
+      "To buy vegetables",
+      "To repair cars",
+      "To teach classes"
+    ],
+    "answer":0
+  },
+  {
+    "type":"bestresponse",
+    "scene":"Best response.",
+    "text":"Receptionist: Have a pleasant stay! What do you say?",
+    "options":[
+      "Thank you very much.",
+      "No.",
+      "Why?",
+      "Maybe."
+    ],
+    "answer":0
+  },
+  {
+    "type":"situation",
+    "scene":"Hotel instructions.",
+    "text":"The receptionist asks you to check out by 11 AM. What should you do?",
+    "options":[
+      "Pack and leave before 11 AM.",
+      "Stay in the room.",
+      "Ignore the instruction.",
+      "Leave the key on the bed."
+    ],
+    "answer":0
+  },
+  {
+    "type":"synonym",
+    "scene":"Vocabulary challenge.",
+    "text":"Which word means the same as comfortable?",
+    "options":[
+      "cozy",
+      "cold",
+      "noisy",
+      "dirty"
+    ],
+    "answer":0
+  },
+  {
+    "type":"opposite",
+    "scene":"Vocabulary challenge.",
+    "text":"What is the opposite of expensive?",
+    "options":[
+      "cheap",
+      "beautiful",
+      "large",
+      "strong"
+    ],
+    "answer":0
+  },
+  {
+    "type":"correctsentence",
+    "scene":"Grammar challenge.",
+    "text":"Choose the correct sentence.",
+    "options":[
+      "She goes to school every day.",
+      "She go to school every day.",
+      "She going to school every day.",
+      "She gone to school every day."
+    ],
+    "answer":0
+  },
+  {
+    "type":"chooseword",
+    "scene":"Grammar challenge.",
+    "text":"I ___ my homework every day.",
+    "options":[
+      "do",
+      "make",
+      "did",
+      "doing"
+    ],
+    "answer":0
+  },
+  {
+    "type":"sequence",
+    "scene":"Hotel routine.",
+    "text":"What should happen first?",
+    "options":[
+      "Check in",
+      "Sleep",
+      "Check out",
+      "Leave"
+    ],
+    "answer":0
+  },
+  {
+    "type":"roleplay",
+    "scene":"Restaurant roleplay.",
+    "text":"Pretend you are the waiter. Ask the customer what they would like to eat."
+  },
+  {
+    "type":"speak",
+    "scene":"Speaking challenge.",
+    "text":"Describe your dream hotel room in three sentences."
+  }
+],
   "station": [
     { "type": "fill", "scene": "At the railway station counter.", "text": "Passenger: I'd like ___ ticket ___ Delhi, please.<br>Clerk: Single or return?", "blanks": ["a", "to"], "hint": "article and preposition" },
     { "type": "mcq", "scene": "Asking about the platform.", "text": "You ask: 'Which platform does the train ___ Delhi leave from?'", "options": ["to", "for", "in", "at"], "answer": 0 },
