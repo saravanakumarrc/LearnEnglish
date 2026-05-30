@@ -896,10 +896,9 @@ function buildQuestionHTML(q, idx) {
 
   let inner = '';
   if (q.type === 'fill') {
-    let txt = q.text;
-    q.blanks.forEach((b,i) => {
-      txt = txt.replace('___', `<input class="blank-input" id="blank_${i}" placeholder="___" oninput="autoResize(this)" autocomplete="off">`);
-    });
+    const parts = q.text.split('___');
+    const inputs = q.blanks.map((b, i) => `<input class="blank-input" id="blank_${i}" placeholder="___" oninput="autoResize(this)" autocomplete="off">`);
+    let txt = parts.reduce((html, part, index) => html + part + (inputs[index] || ''), '');
     inner = `<div class="q-text">${txt}</div>
     <div class="q-actions">
       <button class="btn-primary" onclick="checkFill(${JSON.stringify(q.blanks).replace(/"/g,'&quot;')})">Check ✓</button>
@@ -916,12 +915,17 @@ function buildQuestionHTML(q, idx) {
     <div class="q-feedback" id="feedback"></div>`;
   } else if (q.type === 'conv') {
     let blankIdx = 0;
+    const answers = [];
+    const placeholder = '___';
     const lines = q.dialogue.map(line => {
       if (line.blank) {
-        const bi = blankIdx++;
+        const parts = line.text.split(placeholder);
+        const answersForLine = Array.isArray(line.answer) ? line.answer : Array(parts.length - 1).fill(line.answer);
+        answers.push(...answersForLine);
+        const lineHtml = parts.reduce((html, part, index) => html + part + (index < parts.length - 1 ? `<input class="blank-input" id="cblank_${blankIdx++}" placeholder="___" oninput="autoResize(this)" autocomplete="off">` : ''), '');
         return `<div class="conv-line ${line.side}">
           <div class="conv-speaker">${line.speaker}</div>
-          <div class="conv-bubble">${line.text.replace('_____',`<input class="blank-input" id="cblank_${bi}" placeholder="___" oninput="autoResize(this)" autocomplete="off">`)}</div>
+          <div class="conv-bubble">${lineHtml}</div>
         </div>`;
       }
       return `<div class="conv-line ${line.side}">
@@ -929,7 +933,6 @@ function buildQuestionHTML(q, idx) {
         <div class="conv-bubble">${line.text}</div>
       </div>`;
     });
-    const answers = q.dialogue.filter(l=>l.blank).map(l=>l.answer);
     inner = `<div class="conv-dialogue">${lines.join('')}</div>
     <div class="q-actions">
       <button class="btn-primary" onclick="checkConv(${JSON.stringify(answers).replace(/"/g,'&quot;')})">Check ✓</button>
